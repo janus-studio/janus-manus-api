@@ -8,6 +8,9 @@ from app.infrastructure.logging import setup_logging
 from app.interfaces.endpoints.routes import router
 from app.interfaces.errors.exception_handlers import \
     register_exception_handlers
+from app.infrastructure.storage.redis import get_redis
+from app.infrastructure.storage.postgres import get_postgres
+from app.infrastructure.storage.cos import get_cos
 
 from core.config import get_settings
 
@@ -30,12 +33,19 @@ openapi_tags = [
 async def lifespan(app: FastAPI):
     logger.info('Janus-Manus API 正在初始化')
 
+    await get_redis().init()
+    await get_postgres().init()
+    await get_cos().init()
+
     try:
         yield
     except Exception as e:
         logger.error(f'Janus-Manus API 初始化失败: {e}')
 
     finally:
+        await get_redis().shutdown()
+        await get_postgres().shutdown()
+        await get_cos().shutdown()
         logger.info('Janus-Manus API 已关闭')
 
 

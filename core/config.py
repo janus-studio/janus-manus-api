@@ -14,6 +14,13 @@ class Settings(BaseSettings):
     redis_db: int = 0
     redis_password: str | None = None
 
+    cos_secret_id: str = ''
+    cos_secret_key: str = ''
+    cos_region: str = ''
+    cos_scheme: str = ''
+    cos_bucket: str = ''
+    cos_domain: str = ''
+
     model_config = SettingsConfigDict(
         env_file='.env',
         env_file_encoding='utf-8',
