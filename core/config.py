@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     env: str = 'development'
     log_level: str = 'INFO'
+    app_config_filepath: str = 'config.yaml'
 
     sqlalchemy_database_uri: str = ''
 
