@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from app.interfaces.schemas.base import Response
 from app.domain.models.app_config import LLMConfig
 from app.application.services.app_config_service import AppConfigService
-from app.interfaces.dependencies import get_app_config_service
+from app.interfaces.service_dependencies import get_app_config_service
 
 logger = logging.getLogger(__name__)
 
