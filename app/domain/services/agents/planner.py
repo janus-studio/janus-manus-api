@@ -4,7 +4,7 @@ from typing import Optional, AsyncGenerator
 from .base import BaseAgent
 from app.domain.services.prompts.system import SYSTEM_PROMPT
 from app.domain.services.prompts.planner import PLANNER_SYSTEM_PROMPT, \
-    CREATE_PLANNER_PROMPT, UPDATE_PLANNER_PROMPT
+    CREATE_PLAN_PROMPT, UPDATE_PLAN_PROMPT
 from app.domain.models.event import Event, MessageEvent, PlanEvent, \
     PlanEventStatus
 from app.domain.models.message import Message
@@ -22,7 +22,7 @@ class PlannerAgent(BaseAgent):
 
     async def create_plan(self, message: Message) -> AsyncGenerator[
         Event, None]:
-        query = CREATE_PLANNER_PROMPT.format(
+        query = CREATE_PLAN_PROMPT.format(
             message=message,
             attachments='\n'.join(message.attachments)
         )
@@ -41,7 +41,7 @@ class PlannerAgent(BaseAgent):
 
     async def update_plan(self, plan: Plan, step: Step) -> AsyncGenerator[
         Event, None]:
-        query = UPDATE_PLANNER_PROMPT.format(
+        query = UPDATE_PLAN_PROMPT.format(
             plan=plan.model_dump_json(),
             step=step.model_dump_json()
         )
