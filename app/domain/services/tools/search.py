@@ -7,6 +7,7 @@ from app.domain.models.tool_result import ToolResult
 
 
 class SearchTool(BaseTool):
+    name: str = 'search'
 
     def __init__(self, search_engine: SearchEngine):
         super().__init__()

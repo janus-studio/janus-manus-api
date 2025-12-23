@@ -7,7 +7,8 @@ from filelock import FileLock
 
 from app.application.errors.exceptions import ServerRequestError
 from app.domain.repositories.app_config_repository import AppConfigRepository
-from app.domain.models.app_config import AppConfig, LLMConfig
+from app.domain.models.app_config import AppConfig, LLMConfig, AgentConfig, \
+    McpConfig
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,11 @@ class FileAppConfigRepository(AppConfigRepository):
 
     def _create_default_app_config_if_not_exist(self):
         if not self._config_path.exists():
-            default_app_config = AppConfig(llm_config=LLMConfig())
+            default_app_config = AppConfig(
+                llm_config=LLMConfig(),
+                agent_config=AgentConfig(),
+                mcp_conifg=McpConfig()
+            )
             self.save(default_app_config)
 
     def load(self) -> Optional[AppConfig]:
