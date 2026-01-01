@@ -2,6 +2,8 @@ import logging
 from typing import Optional, Dict
 
 from fastapi import APIRouter, Depends, Body
+
+from app.interfaces.schemas.app_config import ListMCPServerResponse
 from app.interfaces.schemas.base import Response
 from app.domain.models.app_config import LLMConfig, AgentConfig, McpConfig
 from app.application.services.app_config_service import AppConfigService
@@ -76,14 +78,18 @@ async def update_agent_config(
 
 @router.get(
     '/mcp-servers',
-    response_model=Response[McpConfig],
+    response_model=Response[ListMCPServerResponse],
     summary='获取MCP服务器列表',
     description='获取当前系统的MCP服务器列表，包含MCP服务器名字、工具列表、启用状态等'
 )
 async def get_mcp_servers(
         app_config_service: AppConfigService = Depends(get_app_config_service)
-) -> Response[McpConfig]:
-    pass
+) -> Response[ListMCPServerResponse]:
+    mcp_servers = await app_config_service.get_mcp_servers()
+    return Response.success(
+        msg='获取MCP服务器列表成功',
+        data=ListMCPServerResponse(mcp_servers=mcp_servers)
+    )
 
 
 @router.post(

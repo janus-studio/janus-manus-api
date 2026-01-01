@@ -1,7 +1,11 @@
+from typing import List
+
 from app.domain.models.app_config import AppConfig, LLMConfig, AgentConfig, \
     McpConfig
 from app.domain.repositories.app_config_repository import AppConfigRepository
 from app.application.errors.exceptions import NotFoundError
+from app.domain.services.tools.mcp import MCPClientManager
+from app.interfaces.schemas.app_config import ListMCPServerItem
 
 
 class AppConfigService:
@@ -37,6 +41,28 @@ class AppConfigService:
         self._app_config_repository.save(app_config)
 
         return app_config.agent_config
+
+    async def get_mcp_servers(self) -> List[ListMCPServerItem]:
+        app_config = await self._load_app_config()
+
+        mcp_servers = []
+        mcp_client_manager = MCPClientManager(mcp_config=app_config.mcp_config)
+
+        try:
+            await mcp_client_manager.initialize()
+
+            tools = mcp_client_manager.tools
+            for server_name, server_config in app_config.mcp_config.mcpServers.items():
+                mcp_servers.append(ListMCPServerItem(
+                    server_name=server_name,
+                    enabled=server_config.enabled,
+                    transport=server_config.transport,
+                    tools=[t.name for t in tools.get(server_name, [])]
+                ))
+        finally:
+            await mcp_client_manager.cleanup()
+
+        return mcp_servers
 
     async def update_and_create_mcp_servers(
             self, mcp_config: McpConfig) -> McpConfig:
