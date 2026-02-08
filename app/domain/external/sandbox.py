@@ -21,19 +21,31 @@ class Sandbox(Protocol):
     async def kill_process(self, session_id: str) -> ToolResult:
         ...
 
-    async def file_write(self, filepath: str, content: str, append: bool = False,
-                         leading_newline: bool = False, trailing_newline: bool = False,
-                         sudo: bool = False) -> ToolResult:
+    async def write_file(
+            self,
+            filepath: str,
+            content: str,
+            append: bool = False,
+            leading_newline: bool = False,
+            trailing_newline: bool = False,
+            sudo: bool = False,
+    ) -> ToolResult:
         ...
 
-    async def file_read(self, filepath: str, start_line: Optional[int] = None,
-                        end_line: Optional[int] = None, sudo: bool = False) -> ToolResult:
+    async def read_file(
+            self,
+            filepath: str,
+            start_line: Optional[int] = None,
+            end_line: Optional[int] = None,
+            sudo: bool = False,
+            max_length: int = 10000
+    ) -> ToolResult:
         ...
 
-    async def file_exists(self, filepath: str) -> ToolResult:
+    async def check_file_exists(self, filepath: str) -> ToolResult:
         ...
 
-    async def file_delete(self, filepath: str) -> ToolResult:
+    async def delete_file(self, filepath: str) -> ToolResult:
         ...
 
     async def file_list(self, dir_path: str) -> ToolResult:
@@ -43,17 +55,35 @@ class Sandbox(Protocol):
                            sudo: bool = False) -> ToolResult:
         ...
 
-    async def file_search(self, filepath: str, regex: str, sudo: bool = False) -> ToolResult:
+    async def replace_in_file(
+            self,
+            filepath: str,
+            old_str: str,
+            new_str: str,
+            sudo: bool = False,
+    ) -> ToolResult:
         ...
 
-    async def file_find(self, dir_path: str, glob_pattern: str) -> ToolResult:
+    async def search_in_file(
+            self,
+            filepath: str,
+            regex: str,
+            sudo: bool = False,
+    ) -> ToolResult:
         ...
 
-    async def file_upload(self, file_data: BinaryIO, filepath: str,
-                          filename: str = None) -> ToolResult:
+    async def find_files(self, dir_path: str, glob_pattern: str) -> ToolResult:
         ...
 
-    async def file_download(self, filepath: str) -> BinaryIO:
+    async def upload_file(
+            self,
+            file_data: BinaryIO,
+            filepath: str,
+            filename: str = None,
+    ) -> ToolResult:
+        ...
+
+    async def download_file(self, filepath: str) -> BinaryIO:
         ...
 
     async def ensure_sandbox(self) -> None:
