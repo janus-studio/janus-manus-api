@@ -1,3 +1,4 @@
+import sys
 import logging
 
 from core.config import get_settings
@@ -16,7 +17,7 @@ def setup_logging():
         datefmt='%Y-%m-%d %H:%M:%S'
     )
 
-    console_handler = logging.StreamHandler()
+    console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(formatter)
     console_handler.setLevel(log_level)
 
